@@ -1,0 +1,20 @@
+﻿<ion-header>
+	<button ion-button icon-only (click)="goBack()">
+  <ion-icon name="arrow-round-back"></ion-icon>
+</button>
+</ion-header>
+<ion-content>
+<form (ngSubmit)="showConfirmDialog()">
+	Para registrar al nuevo usuario, introduce su nombre y contraseña.<br/>
+      <ion-item>
+        <ion-label>Nombre de usuario:</ion-label>
+        <ion-input type="text" [(ngModel)]="user" name="user" textholder="Usuario01"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="pass" name="pass" textholder="0001"></ion-input>
+      </ion-item>
+      <button ion-button type="submit">Registrar</button>
+</form>
+	
+</ion-content>

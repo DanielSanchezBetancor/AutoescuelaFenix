@@ -1,0 +1,14 @@
+<ion-content>  
+<form (ngSubmit)='login()'>  
+      <ion-item> 
+        <ion-label>Nombre de usuario:</ion-label> 
+        <ion-input type='text'[(ngModel)]='user' name='user' textholder='Usuario01'></ion-input> 
+      </ion-item> 
+      <ion-item> 
+        <ion-label>Contraseña: </ion-label> 
+        <ion-input type='password' [(ngModel)]='pass' name='pass' textholder='0001'></ion-input> 
+      </ion-item> 
+      <button ion-button type='submit'>Conectarse</button> 
+</form> 
+<ion-spinner *ngIf='loading'>Conectando, espera</ion-spinner> 
+</ion-content>

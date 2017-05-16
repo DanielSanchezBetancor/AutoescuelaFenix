@@ -1,0 +1,16 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>schedule</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<ul>
+<li *ngFor="let practica of data">
+{{practica.user}} - {{practica.date | date: 'dd/MM/yyyy'}} - {{practica.hour}}
+</li>
+</ul>
+</ion-content>
