@@ -15,6 +15,7 @@ export class HomePage {
 	role: any;
 	name: any;
 	refresh:boolean = false;
+	greetings: any;
 	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams) {
 		let role = {
 			admin: false,
@@ -24,9 +25,13 @@ export class HomePage {
 		this.role = role;
 		this.checkRole();
 		this.checkName();
+		this.getDate();
 	}
 	changeState(state) {
-		if (state == 1)
+		console.log("(HomePage)changeState -> " + state);
+		if (state == 0) 
+			this.app.getRootNav().getActiveChildNav().select(0);
+		else if (state == 1)
 			this.app.getRootNav().getActiveChildNav().select(1);
 		else if (state == 2)
 			this.nav.push(InfoPage);
@@ -40,33 +45,41 @@ export class HomePage {
 	ctrlPopover(ev) {
 		this.globalservices.startPopover(ev);
 	}
-    logout() {
+    logout() {		
+		console.log("(HomePage)logout");
 		this.globalservices.loginGuest();
-		this.globalservices.refreshPage(this.nav, HomePage);
-	}
-	getRole() {
-		return this.storage.get('role');
-	}
-	getName() {
-		return this.storage.get('name');
+		this.checkRole();
 	}
 	checkRole() {
-		this.getRole().then((role) => {
-		  this.role = role;
-		    if (this.role.guest == false && this.refresh == true) {
-				this.globalservices.refreshPage(this.nav, HomePage);
-			}
-	  }, (err) => {
-		  console.log("Error comprobando el rol: " + err);
-		  this.checkRole();
-	  });
+		console.log("(HomePage)checkRole");
+		this.storage.get('role').then((role) => {
+			this.role = role;
+		}, (err) => {
+			console.log("Error comprobando el rol: " + err);
+			this.checkRole();
+		});
 	}
 	checkName() {
-		this.getName().then((name) => {
-		  this.name = name;
-	  }, (err) => {
-		  console.log("Error comprobando el nombre: " + err);
-		  this.checkRole();
-	  });
+		this.storage.get('name').then((name) => {
+			this.name = name;
+		}, (err) => {
+			console.log("Error comprobando el nombre: " + err);
+			this.checkName();
+		});
+	}
+	getDate() {
+		var date = new Date().toISOString();
+		var hour = parseInt(date.slice(11, 13));
+		if (hour <= 12)
+			this.greetings = "Buenos dias ";
+		else if (hour > 12 && hour <= 20) 
+			this.greetings = "Buenas tardes ";
+		else
+			this.greetings = "Buenas noches ";
+	}
+	ionViewWillEnter() {
+		console.log("(HomePage)ionViewWillEnter");
+		this.checkRole();
+		this.checkName();
 	}
 }

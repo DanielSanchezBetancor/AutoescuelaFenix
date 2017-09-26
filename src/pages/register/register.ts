@@ -57,14 +57,6 @@ export class RegisterPage {
 		});
 		alert.present();
 	}
-	saveJSON() {
-		let data = {
-			"user": this.user,
-			"pass": this.pass,
-			"role": "user"
-		}
-	
-	}
 	goBack() {
 		this.navC.popToRoot();
 	}

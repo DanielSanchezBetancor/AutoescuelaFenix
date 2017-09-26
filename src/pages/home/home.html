@@ -1,6 +1,7 @@
 <ion-header>
   <ion-navbar>
-   <img class="header_logo center" src="assets/images/logo_fenix.png">
+	
+		<button class="header_logo" (click)="changeState(0)"><img  src="assets/images/logo_fenix.png" /></button>
    <button ion-button icon-only (click)="ctrlPopover($event)" style="float: right; !important">
 		<ion-icon name="more"></ion-icon>
 	</button>
@@ -9,9 +10,11 @@
 </ion-header>
 
 <ion-content padding>
-	<img class="logo" src="assets/images/logo_fenix.png">
 	<p text-center>
 		Bienvenido a la aplicación de la autoescuela Fénix. Aquí encontrarás toda la información que necesites.
+	</p>
+	<p text-center>
+		{{greetings}}
 	</p>
  <br/>
 <button ion-button class="menu_button" *ngIf="role.guest" (click)="changeState(1)"  icon-left block>

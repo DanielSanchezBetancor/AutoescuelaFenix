@@ -30,7 +30,7 @@ export class SchedulePage {
 	name: any;
 	id: any;
 	dates: any;
-	practicas: any;
+	n_pract: any;
 	constructor(private nav: NavController, private storage: Storage, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private globalservices: GlobalServices, private platform: Platform) {
 		this.hours = ["16:00:00", "16:45:00", "17:30:00", "18:15:00"];
 		platform.ready().then(() => {
@@ -55,6 +55,9 @@ export class SchedulePage {
 			this.storage.get('id').then((id) => {
 				this.id = id;
 			});
+			this.storage.get('n_pract').then((n_pract) => {
+				this.n_pract = n_pract;
+			});
 		});
 		
 	}
@@ -68,8 +71,8 @@ export class SchedulePage {
 				thirdh: null,
 				fourh: null
 			};
-			var lel = today.toISOString();
-			DT.date = lel.slice(0, 10);
+			var formatToday = today.toISOString();
+			DT.date = formatToday.slice(0, 10);
 			DT.firsth = this.calculateHour(DT.date, "16:00:00");
 			DT.secondh = this.calculateHour(DT.date, "16:45:00");
 			DT.thirdh = this.calculateHour(DT.date, "17:30:00");
@@ -136,14 +139,15 @@ export class SchedulePage {
 		alert.present();
 	}
 	uploadHour(choose, hour) {
-		console.log(hour); 
-		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/manage-schedule.php?date=" + choose + "&hour=" + hour + "&id_usuario=" + this.id)
+		n_pract++;
+		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/manage-schedule.php?date=" + choose + "&hour=" + hour + "&id_usuario=" + this.id + "&n_pract=" + (this.n_pract))
 		.map((response:Response) => response.json())
 		.subscribe((message) => {
-			console.log("Hecho");
-			this.globalservices.refreshPage(this.nav, SchedulePage);
+			location.reload();
+			this.storage.set("n_pract", n_pract);
 		}, (err) => {
 			console.log(err);
+			n_pract--;
 		});
 	}
 	showPersonalSchedule() {

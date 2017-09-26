@@ -6,22 +6,53 @@ Listado de precios
   </ion-navbar>
 </ion-header>
 <ion-content>
-	<ion-list>
-	Libro 10€
-	</ion-list>
-	<ion-list>
-	Matricula 30€
-	</ion-list>
-	<ion-list>
-	Examen teorico: 95€
-	</ion-list>
-	<ion-list>
-	Examen practico 39€
-	</ion-list>
-	<ion-list>
-	Practicas (45 minutos) 25€
-	</ion-list>
-	<ion-list>
-	Bono de 10 practicas 230€
-	</ion-list>
+<ion-item-group>
+	<ion-item-divider class="divider">
+	Matrícula
+	</ion-item-divider>
+		<ion-item class="hiddenitemlist" *ngIf="!hide">
+			20€/3 meses de contrato
+		</ion-item>
+		<ion-item class="itemlist">
+		30€/6 meses de contrato
+		</ion-item>
+		<ion-item class="hiddenitemlist" *ngIf="!hide">
+			60€/6 meses de contrato + 3 prácticas
+		</ion-item>
+</ion-item-group>
+	<ion-item-divider class="divider">
+	Libro
+	</ion-item-divider>
+		<ion-item class="itemlist">
+		Teórico oficial (2017) - 10€
+		</ion-item>
+		<ion-item class="itemlist">
+		Tests generales - 5€
+		</ion-item>
+	<ion-item-divider class="divider">
+	Prácticas
+	</ion-item-divider>
+		<ion-item class="itemlist">
+		25€/45 minutos
+		</ion-item>
+		<ion-item class="itemlist" *ngIf="hide">
+		Bono de 10 prácticas - 230€
+		</ion-item>
+		<ion-item class="hiddenitemlist" *ngIf="!hide">
+		Bono de 5 prácticas - 110€
+		</ion-item>
+		<ion-item class="hiddenitemlist" *ngIf="!hide">
+		Bono de 10 prácticas - 210€
+		</ion-item>
+	<ion-item-divider class="divider">
+	Exámenes
+	</ion-item-divider>
+		<ion-item class="itemlist">
+		Teórico - 95€
+		</ion-item>
+		<ion-item class="itemlist">
+		Práctico - 39€
+		</ion-item>
+<button ion-button class="center" (click)="ensenarOfertas()" *ngIf="hide">¡¡Activar ofertas de verano!!</button>
+<button ion-button class="center" (click)="ensenarOfertas()" *ngIf="!hide">Desactivar ofertas de verano</button>
 </ion-content>

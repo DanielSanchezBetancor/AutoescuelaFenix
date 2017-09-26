@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PopoverController, Platform, ToastController } from 'ionic-angular';
 import { PopOver } from '../popover/popover';
-import { Http, Response } from '@angular/http';
+import { Http } from '@angular/http';
 import { Storage } from '@ionic/storage';
 
 @Injectable()
@@ -29,13 +29,13 @@ export class GlobalServices {
 	  closePopover() {
 		  this.popover.dismiss();
 	  }
-	  loginUser(name, id) {
+	  loginUser(name, id, n_pract) {
 		  let role = {
 			  admin: false,
 			  user: true,
 			  guest: false
 		  };
-		  this.saveRole(role, name, id);
+		  this.saveRole(role, name, id, n_pract);
 	  }
 	  loginAdmin(name, id) {
 		 let role = {
@@ -43,7 +43,7 @@ export class GlobalServices {
 			  user: false,
 			  guest: false
 		  };
-		this.saveRole(role, name, id);
+		this.saveRole(role, name, id, 0);
 	  }
 	loginGuest() {
 		let role = {
@@ -51,13 +51,13 @@ export class GlobalServices {
 			user: false,
 			guest: true
 		};
-		this.saveRole(role, "invitado", 0);
+		this.saveRole(role, "invitado", 0, 0);
 	}
-	saveRole(role, name, id) {
+	saveRole(role, name, id, n_pract) {
 		this.storage.set('role', role);
 		this.storage.set('name', name);
 		this.storage.set('id', id);
-		console.log("\nGuardado el rol.nombre: " + name + "\nGuardado el rol.id: " + id);
+		this.storage.set('n_pract', n_pract);
 	  }
 	download(url) {
 		return this.http.get(url);
@@ -70,21 +70,7 @@ export class GlobalServices {
 		});
 		toast.present();
 	}
-	cleanNav(nav) {
-		console.log("Length: " + nav.length());
-		return nav.remove(0, nav.length()-1);
-	}
-	refreshPage(nav, page) {
-		console.log("Length: " + nav.length());
-		this.cleanNav(nav).then(() => {
-			nav.push(page);
-			console.log("Length: " + nav.length());
-		}, (err) => {
-			console.log("Error: " + err);
-		});
-	}
 	getRole() {
-		console.log("GetRole");
 		return this.storage.get('role');
 	}
 	
