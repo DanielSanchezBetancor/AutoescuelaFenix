@@ -14,17 +14,13 @@ import { SchedulePage } from '../schedule/schedule';
 export class HomePage {
 	role: any;
 	name: any;
+	id: any;
+	n_pract: any;
 	refresh:boolean = false;
 	greetings: any;
 	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams) {
-		let role = {
-			admin: false,
-			user: false,
-			guest: true
-		};
-		this.role = role;
+		this.checkIfLogged();
 		this.checkRole();
-		this.checkName();
 		this.getDate();
 	}
 	changeState(state) {
@@ -49,23 +45,38 @@ export class HomePage {
 		console.log("(HomePage)logout");
 		this.globalservices.loginGuest();
 		this.checkRole();
+		location.reload();
 	}
 	checkRole() {
-		console.log("(HomePage)checkRole");
 		this.storage.get('role').then((role) => {
 			this.role = role;
+			if (role.admin !== undefined && role.admin == true) {
+				this.globalservices.loginAdmin(this.name, this.id);
+			} else if (role.user !== undefined && role.user == true) {
+				this.globalservices.loginUser(this.name, this.id, this.n_pract);
+			} else if (role.guest  !== undefined && role.guest == true) {
+				this.globalservices.loginGuest();
+			}
 		}, (err) => {
 			console.log("Error comprobando el rol: " + err);
 			this.checkRole();
 		});
 	}
-	checkName() {
+	checkIfLogged() {
+		console.log("(HomePage)checkIfLogged");
 		this.storage.get('name').then((name) => {
 			this.name = name;
 		}, (err) => {
 			console.log("Error comprobando el nombre: " + err);
-			this.checkName();
+			this.checkIfLogged();
 		});
+		this.storage.get('id').then((id) => {
+			this.id = id;
+		}, (err) => {
+			console.log("Error comprobando el id: " + err);
+			this.checkIfLogged();
+		});
+		this.storage.get('n_pract').then((n_pract) => { this.n_pract = n_pract });
 	}
 	getDate() {
 		var date = new Date().toISOString();
@@ -80,6 +91,6 @@ export class HomePage {
 	ionViewWillEnter() {
 		console.log("(HomePage)ionViewWillEnter");
 		this.checkRole();
-		this.checkName();
+		this.checkIfLogged();
 	}
 }

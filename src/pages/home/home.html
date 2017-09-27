@@ -17,47 +17,47 @@
 		{{greetings}}
 	</p>
  <br/>
-<button ion-button class="menu_button" *ngIf="role.guest" (click)="changeState(1)"  icon-left block>
+<button ion-button class="menu_button" *ngIf="role?.guest" (click)="changeState(1)"  icon-left block>
 	<ion-icon name="navigate"> 
 		¿Dónde nos encontramos? 
 	</ion-icon>
 </button>
-<button ion-button *ngIf="role.guest" (click)="changeState(2)"  icon-left block>
+<button ion-button *ngIf="role?.guest" (click)="changeState(2)"  icon-left block>
 	<ion-icon name="logo-euro"> 
 		Listado de precios
 	</ion-icon>
 </button>
-<button ion-button *ngIf="role.guest" (click)="changeState(3)" icon-left block >
+<button ion-button *ngIf="role?.guest" (click)="changeState(3)" icon-left block >
 	<ion-icon name="md-log-in">
 		Iniciar sesión
 	</ion-icon>
 </button>
-<button ion-button *ngIf="!role.guest" (click)="changeState(5)" icon-left block>
+<button ion-button *ngIf="!role?.guest" (click)="changeState(5)" icon-left block>
 	<ion-icon name="calendar">
 		Planificación de prácticas
 	</ion-icon>
 </button>
-<div *ngIf="role.admin">
+<div *ngIf="role?.admin">
 <button ion-button (click)="changeState(4)" icon-left block >
 	<ion-icon name="cloud-upload">
 		Añadir usuario
 	</ion-icon>
 </button>
 </div>
-<div *ngIf="role.user || role.admin">
+<div *ngIf="role?.user || role?.admin">
 <button ion-button (click)="logout($event)" icon-left block >
 	<ion-icon name="md-log-out">
 		Cerrar sesión
 	</ion-icon>
 </button>
 </div>
-<ion-label class="role_text">
-	<div *ngIf="role.guest">
+<ion-label class="role???_text">
+	<div *ngIf="role?.guest">
 		Estas navegando como invitado
 	</div>
 </ion-label>
-<ion-label class="role_text">
-	<div *ngIf="role.user || role.admin">
+<ion-label class="role???_text">
+	<div *ngIf="role?.user || role?.admin">
 		Bienvenido, {{name}}
 	</div>
 </ion-label>

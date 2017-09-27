@@ -58,6 +58,10 @@ export class GlobalServices {
 		this.storage.set('name', name);
 		this.storage.set('id', id);
 		this.storage.set('n_pract', n_pract);
+		
+			console.log(this.storage.get('n_pract'));
+			console.log(this.storage.get('id'));
+			console.log(n_pract);
 	  }
 	download(url) {
 		return this.http.get(url);

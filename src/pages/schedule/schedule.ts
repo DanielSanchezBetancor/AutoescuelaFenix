@@ -139,15 +139,15 @@ export class SchedulePage {
 		alert.present();
 	}
 	uploadHour(choose, hour) {
-		n_pract++;
+		this.n_pract++;
 		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/manage-schedule.php?date=" + choose + "&hour=" + hour + "&id_usuario=" + this.id + "&n_pract=" + (this.n_pract))
 		.map((response:Response) => response.json())
 		.subscribe((message) => {
 			location.reload();
-			this.storage.set("n_pract", n_pract);
+			this.storage.set("n_pract", this.n_pract);
 		}, (err) => {
 			console.log(err);
-			n_pract--;
+			this.n_pract--;
 		});
 	}
 	showPersonalSchedule() {
