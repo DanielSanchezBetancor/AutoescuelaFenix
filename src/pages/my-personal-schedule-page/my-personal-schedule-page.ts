@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform } from 'ionic-angular';
+import { NavController, NavParams, Platform, LoadingController } from 'ionic-angular';
 import { Response } from '@angular/http';
 import { GlobalServices } from '../services/global.services';
 import { Storage } from '@ionic/storage';
@@ -7,32 +7,45 @@ import { Storage } from '@ionic/storage';
 @Component({
   selector: 'page-my-personal-schedule-page',
   template: 
-  '<ion-content><li *ngIf="data" *ngFor="let dat of data">Practica {{dat.n_pract}}<ul>Fecha: {{dat.date}}</ul><ul>Hora: {{dat.hour}}</ul>' + 
+  '<ion-content><li *ngFor="let dat of data">Practica {{dat.n_pract}}<ul>Fecha: {{dat.date}}</ul><ul>Hora: {{dat.hour}}</ul>' + 
   '<ul><button ion-button (click)="deleteSchedule(dat)">Eliminar</button></ul>' + 
   '</li>' + 
-  '<ion-content><div *ngIf="!data">No tienes practicas. Añade una desde la ventana de prácticas.<br><button ion-button (click)="goBack()">Volver atras</button></div>' + 
-  '</ion-content>'
+  '<ion-content><div *ngIf="!data || data.length <= 0">No tienes practicas. Añade una desde la ventana de prácticas.</div>'
+  + '<button ion-button (click)="goBack()">Volver atras</button>' 
+  + '</ion-content>'
 })
 export class MyPersonalSchedulePage {
 	id: any;
 	data: any;
 	n_pract: any;
-	constructor(private nav: NavController, private navParams: NavParams, private globalservices: GlobalServices, private platform: Platform, private storage: Storage) {
+	constructor(private nav: NavController, private navParams: NavParams, private globalservices: GlobalServices, private platform: Platform, private storage: Storage, private loadingCtrl: LoadingController) {
+		let loading = this.loadingCtrl.create({
+			content: "Espere por favor..."
+		});
+		loading.present();
 		this.id = navParams.get('id');
-		
+		this.downloadData(loading);
 	}
 	//Contenido de data
 	//.id_p -> id de la practica
 	//.date -> fecha
 	//.hour -> hora
 	//id_up -> id del alumno respecto a la practica
-	downloadData() {
+	downloadData(loading) {
+		if (this.id === undefined) {
+			console.log("No se ha encontrado la id en el programa, buscando otra vez");
+			this.id = this.navParams.get('id');
+		}
 		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/retrieve-personal-schedule.php?id=" + this.id)
 		.map((response:Response) => response.json())
 		.subscribe((data) => {
 			if (data !== undefined) {
 				this.checkData(data);
 			}
+			loading.dismiss();
+		}, (err) => {
+			console.log("Error al descargar los datos -> " + err);
+			loading.dismiss();
 		});
 	}
 	deleteSchedule(dat) {
@@ -51,27 +64,22 @@ export class MyPersonalSchedulePage {
 		let today = new Date().toISOString().slice(0, 10);
 		for (let i = 0;i<data.length;i++) {
 			if (data[i].date >= today) {
-				newData[counter] = data[i];
 				let newObjectData = {
-					id_p: newData[counter].id_p, 
-					date: newData[counter].date,
-					hour: newData[counter].hour,
-					id_up: newData[counter].id_up,
-					n_pract: this.n_pract-i
+					id_p: data[i].id_p,
+					date: data[i].date,
+					hour: data[i].hour,
+					n_pract: data[i].n_pract-(data[i].n_pract-(i+1))
 				}
-				newData[counter] = newObjectData;
+				newData.push(newObjectData);
 				counter--;
 			} else {
 				this.deleteSchedule(data[i]);
+				this.n_pract--;
 			}
 		}
 		this.data = newData;
 	}
 	goBack() {
 		this.nav.pop();
-	}
-	ionViewWillEnter() {
-		this.n_pract = this.storage.get('n_pract').then((n_pract) => { this.n_pract = n_pract });
-		this.downloadData();
 	}
 }

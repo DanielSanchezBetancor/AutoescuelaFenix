@@ -20,8 +20,9 @@ import { MyPersonalSchedulePage } from '../my-personal-schedule-page/my-personal
   "</ul>" +
   "</div>" + 
   "<button ion-button (click)='showConfirmDialog()'>Añadir nueva práctica</button>" + 
-  "<button ion-button (click)='showPersonalSchedule()'>Ver mis prácticas</button>" + 
-  "</ion-content>"
+  "<button ion-button (click)='showPersonalSchedule()'>Ver mis prácticas</button>"
+  + "<button ion-button (click)='goBack()'>Volver atrás</button>"
+  + "</ion-content>"
 })
 export class SchedulePage {
 	data: any;
@@ -139,18 +140,28 @@ export class SchedulePage {
 		alert.present();
 	}
 	uploadHour(choose, hour) {
+		let loading = this.loadingCtrl.create({
+			content: "Asignado la practica seleccionada..."
+		});
+		loading.present();
 		this.n_pract++;
 		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/manage-schedule.php?date=" + choose + "&hour=" + hour + "&id_usuario=" + this.id + "&n_pract=" + (this.n_pract))
 		.map((response:Response) => response.json())
 		.subscribe((message) => {
-			location.reload();
 			this.storage.set("n_pract", this.n_pract);
+			this.nav.pop();
+			this.nav.push(SchedulePage);
+			loading.dismiss();
 		}, (err) => {
 			console.log(err);
 			this.n_pract--;
+			loading.dismiss();
 		});
 	}
 	showPersonalSchedule() {
 		this.nav.push(MyPersonalSchedulePage, { id: this.id});
+	}
+	goBack() {
+		this.nav.pop();
 	}
 }

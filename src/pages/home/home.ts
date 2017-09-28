@@ -19,12 +19,13 @@ export class HomePage {
 	refresh:boolean = false;
 	greetings: any;
 	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams) {
+		//CheckIfRLogged y CheckRole hacen lo mismo basicamente, hay que modificarlo para que compruebe solo el rol, si existe para usuario o admin, comprobar que datos estan guardados. Si los datos guardados no parecen muy estables, se sacaran de la bdd otra vez.
 		this.checkIfLogged();
 		this.checkRole();
 		this.getDate();
+		console.log(this.role);
 	}
 	changeState(state) {
-		console.log("(HomePage)changeState -> " + state);
 		if (state == 0) 
 			this.app.getRootNav().getActiveChildNav().select(0);
 		else if (state == 1)
@@ -42,7 +43,6 @@ export class HomePage {
 		this.globalservices.startPopover(ev);
 	}
     logout() {		
-		console.log("(HomePage)logout");
 		this.globalservices.loginGuest();
 		this.checkRole();
 		location.reload();
@@ -63,7 +63,6 @@ export class HomePage {
 		});
 	}
 	checkIfLogged() {
-		console.log("(HomePage)checkIfLogged");
 		this.storage.get('name').then((name) => {
 			this.name = name;
 		}, (err) => {

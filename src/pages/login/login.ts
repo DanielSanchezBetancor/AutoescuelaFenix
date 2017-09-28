@@ -3,7 +3,6 @@ import { NavController, App, LoadingController } from 'ionic-angular';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { GlobalServices } from '../services/global.services';
-import { TabsPage } from '../tabs/tabs';
 @Component({
 selector: 'login-page',
 templateUrl: 'login.html'
@@ -37,6 +36,7 @@ constructor(private nav: NavController, private globalservices: GlobalServices, 
 					if (this.user == data[i].user.trim().toLowerCase()) {
 						if (this.pass == data[i].pass.trim().toLowerCase()) {
 							err = false;
+							console.log(data[i]);
 							if (data[i].role == "user")
 								this.globalservices.loginUser(this.user, data[i].id_u, data[i].n_pract);
 							else
