@@ -19,11 +19,9 @@ export class HomePage {
 	refresh:boolean = false;
 	greetings: any;
 	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams) {
-		//CheckIfRLogged y CheckRole hacen lo mismo basicamente, hay que modificarlo para que compruebe solo el rol, si existe para usuario o admin, comprobar que datos estan guardados. Si los datos guardados no parecen muy estables, se sacaran de la bdd otra vez.
-		this.checkIfLogged();
-		this.checkRole();
 		this.getDate();
-		console.log(this.role);
+		this.checkRole();
+		this.getData();
 	}
 	changeState(state) {
 		if (state == 0) 
@@ -49,33 +47,11 @@ export class HomePage {
 	}
 	checkRole() {
 		this.storage.get('role').then((role) => {
+			console.log(role);
 			this.role = role;
-			if (role.admin !== undefined && role.admin == true) {
-				this.globalservices.loginAdmin(this.name, this.id);
-			} else if (role.user !== undefined && role.user == true) {
-				this.globalservices.loginUser(this.name, this.id, this.n_pract);
-			} else if (role.guest  !== undefined && role.guest == true) {
-				this.globalservices.loginGuest();
-			}
 		}, (err) => {
 			console.log("Error comprobando el rol: " + err);
-			this.checkRole();
 		});
-	}
-	checkIfLogged() {
-		this.storage.get('name').then((name) => {
-			this.name = name;
-		}, (err) => {
-			console.log("Error comprobando el nombre: " + err);
-			this.checkIfLogged();
-		});
-		this.storage.get('id').then((id) => {
-			this.id = id;
-		}, (err) => {
-			console.log("Error comprobando el id: " + err);
-			this.checkIfLogged();
-		});
-		this.storage.get('n_pract').then((n_pract) => { this.n_pract = n_pract });
 	}
 	getDate() {
 		var date = new Date().toISOString();
@@ -87,9 +63,12 @@ export class HomePage {
 		else
 			this.greetings = "Buenas noches ";
 	}
-	ionViewWillEnter() {
-		console.log("(HomePage)ionViewWillEnter");
-		this.checkRole();
-		this.checkIfLogged();
+	getData() {
+		this.storage.get("name").then((name) => {
+			if (name !== undefined)
+				this.name = name;
+			else
+				this.name = "ERROR";
+		});
 	}
 }

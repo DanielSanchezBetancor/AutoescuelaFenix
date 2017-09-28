@@ -144,6 +144,10 @@ export class SchedulePage {
 			content: "Asignado la practica seleccionada..."
 		});
 		loading.present();
+		if (this.id === undefined) {
+			console.log("Fallo al recoger la id del usuario, intentandolo de nuevo");
+			this.id = this.storage.get("id");
+		}
 		this.n_pract++;
 		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/manage-schedule.php?date=" + choose + "&hour=" + hour + "&id_usuario=" + this.id + "&n_pract=" + (this.n_pract))
 		.map((response:Response) => response.json())
