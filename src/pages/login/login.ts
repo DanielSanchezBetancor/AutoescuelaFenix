@@ -47,8 +47,14 @@ constructor(private nav: NavController, private globalservices: GlobalServices, 
 				if (err) {
 					this.globalservices.activeToast("Usuario o contraseña incorrectos");
 				} else {
+					loading = this.loadingCtrl.create({
+						content: "Recargando pagina..."
+					});
+					loading.present();
 					this.globalservices.activeToast("Has iniciado sesion correctamente");
 					this.nav.pop();
+					location.reload();
+					loading.dismiss();
 				}
 			}, (error) => {
 				loading.dismiss();
@@ -59,10 +65,7 @@ constructor(private nav: NavController, private globalservices: GlobalServices, 
 			});
 		}
 	}
-getData() {
-
-}
-checkPass() {
-
-}
+	goBack() {
+		this.nav.pop();
+	}
 }

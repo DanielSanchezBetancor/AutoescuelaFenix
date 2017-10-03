@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { App, NavController, NavParams } from 'ionic-angular';
+import { App, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { GlobalServices } from '../services/global.services';
 import { InfoPage } from '../info/info';
 import { LoginPage } from '../login/login';
@@ -18,7 +18,7 @@ export class HomePage {
 	n_pract: any;
 	refresh:boolean = false;
 	greetings: any;
-	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams) {
+	constructor(public app: App, public globalservices: GlobalServices, private nav: NavController, private storage: Storage, private navParams: NavParams, private loadingCtrl: LoadingController) {
 		this.getDate();
 		this.checkRole();
 		this.getData();
@@ -41,13 +41,17 @@ export class HomePage {
 		this.globalservices.startPopover(ev);
 	}
     logout() {		
+		let loading = this.loadingCtrl.create({
+			content: "Desconectando, espera un segundo..."
+		})
+		loading.present();
 		this.globalservices.loginGuest();
 		this.checkRole();
 		location.reload();
+		loading.dismiss();
 	}
 	checkRole() {
 		this.storage.get('role').then((role) => {
-			console.log(role);
 			this.role = role;
 		}, (err) => {
 			console.log("Error comprobando el rol: " + err);

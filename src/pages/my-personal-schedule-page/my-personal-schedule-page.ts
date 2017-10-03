@@ -19,19 +19,19 @@ export class MyPersonalSchedulePage {
 	data: any;
 	n_pract: any;
 	constructor(private nav: NavController, private navParams: NavParams, private globalservices: GlobalServices, private platform: Platform, private storage: Storage, private loadingCtrl: LoadingController) {
-		let loading = this.loadingCtrl.create({
-			content: "Espere por favor..."
-		});
-		loading.present();
 		this.id = navParams.get('id');
-		this.downloadData(loading);
+		this.downloadData();
 	}
 	//Contenido de data
 	//.id_p -> id de la practica
 	//.date -> fecha
 	//.hour -> hora
 	//id_up -> id del alumno respecto a la practica
-	downloadData(loading) {
+	downloadData() {
+		let loading = this.loadingCtrl.create({
+			content: "Espere por favor..."
+		});
+		loading.present();
 		if (this.id === undefined) {
 			console.log("No se ha encontrado la id en el programa, buscando otra vez");
 			this.id = this.navParams.get('id');
@@ -49,11 +49,17 @@ export class MyPersonalSchedulePage {
 		});
 	}
 	deleteSchedule(dat) {
+		let loading = this.loadingCtrl.create({
+			content: "Borrando practica..."
+		});
+		loading.present();
 		this.globalservices.download("https://aefenixbackend.000webhostapp.com/MySqlPHP/delete-personal-schedule.php?id_p=" + dat.id_p)
 		.map((response:Response) => response.json())
 		.subscribe((message) => {
-			location.reload();
+			loading.dismiss();
+			this.downloadData();
 		}, (err) => {
+			loading.dismiss();
 			console.log("Hubo un error al eliminar la practica. Intentalo de nuevo");
 		});	
 	}
